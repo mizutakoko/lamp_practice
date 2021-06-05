@@ -1,24 +1,28 @@
 <?php
+//設定ファイル接続
 require_once '../conf/const.php';
+//関数ファイル接続
 require_once MODEL_PATH . 'functions.php';
+//userファイル接続
 require_once MODEL_PATH . 'user.php';
+//itemファイル接続
 require_once MODEL_PATH . 'item.php';
 
-session_start();
+session_start();  //セッション
 
-if(is_logined() === false){
+if(is_logined() === false){ //もしログインしなかったらログイン画面に移動する
   redirect_to(LOGIN_URL);
 }
 
-$db = get_db_connect();
+$db = get_db_connect(); //DB接続関数
 
-$user = get_login_user($db);
+$user = get_login_user($db);  //ログインしたuser 引数に$dbh
 
-if(is_admin($user) === false){
+if(is_admin($user) === false){  //リダイレクト関数　$userじゃなかったらログイン画面に移動
   redirect_to(LOGIN_URL);
 }
 
-$item_id = get_post('item_id');
+$item_id = get_post('item_id'); 
 $changes_to = get_post('changes_to');
 
 if($changes_to === 'open'){

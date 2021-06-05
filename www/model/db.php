@@ -16,33 +16,33 @@ function get_db_connect(){
   return $dbh;
 }
 
-function fetch_query($db, $sql, $params = array()){
+function fetch_query($db, $sql, $params = array()){   //一行を実行する関数
   try{
-    $statement = $db->prepare($sql);
-    $statement->execute($params);
-    return $statement->fetch();
-  }catch(PDOException $e){
+    $statement = $db->prepare($sql);  //実行を準備する
+    $statement->execute($params);   //実行する
+    return $statement->fetch();   //一行
+  }catch(PDOException $e){    //例外処理
     set_error('データ取得に失敗しました。');
   }
   return false;
 }
 
-function fetch_all_query($db, $sql, $params = array()){
+function fetch_all_query($db, $sql, $params = array()){   //複数行を実行する関数
   try{
-    $statement = $db->prepare($sql);
-    $statement->execute($params);
-    return $statement->fetchAll();
-  }catch(PDOException $e){
+    $statement = $db->prepare($sql);  //実行準備
+    $statement->execute($params);   //実行　$params(配列)
+    return $statement->fetchAll();  //複数行
+  }catch(PDOException $e){  //例外処理
     set_error('データ取得に失敗しました。');
   }
   return false;
 }
 
-function execute_query($db, $sql, $params = array()){
+function execute_query($db, $sql, $params = array()){ //実行準備して実行する関数
   try{
-    $statement = $db->prepare($sql);
-    return $statement->execute($params);
-  }catch(PDOException $e){
+    $statement = $db->prepare($sql);  //実行準備
+    return $statement->execute($params);  //実行
+  }catch(PDOException $e){    //例外処理
     set_error('更新に失敗しました。');
   }
   return false;
