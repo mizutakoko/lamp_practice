@@ -102,7 +102,7 @@ function update_item_status($db, $item_id, $status){
   return execute_query($db, $sql);
 }
 
-function update_item_stock($db, $item_id, $stock){
+function update_item_stock($db, $item_id, $stock){  //アイテム在庫の変更関数
   $sql = "
     UPDATE
       items
@@ -111,9 +111,9 @@ function update_item_stock($db, $item_id, $stock){
     WHERE
       item_id = {$item_id}
     LIMIT 1
-  ";
+  ";  //itemsテーブルの在庫を変更　条件は$item_id
   
-  return execute_query($db, $sql);
+  return execute_query($db, $sql);  //戻り値　実行準備して実行する関数
 }
 
 function destroy_item($db, $item_id){
