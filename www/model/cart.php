@@ -1,7 +1,7 @@
 <?php 
-//設定ファイルの読み込み
-require_once MODEL_PATH . 'functions.php';
 //関数ファイルの読み込み
+require_once MODEL_PATH . 'functions.php';
+//設定ファイルの読み込み
 require_once MODEL_PATH . 'db.php';
 
 function get_user_carts($db, $user_id){   //ユーザーカートの関数 itemsとcartsの表示　結合して条件user_id

@@ -81,45 +81,45 @@ function get_upload_filename($file){  //アップロードファイルの関数
     return '';
   }
   $mimetype = exif_imagetype($file['tmp_name']);//$image['tmp_name']の画像を調べて変数に代入
-  $ext = PERMITTED_IMAGE_TYPES[$mimetype];  //変数の画像のタイプを$extに代入
+  $ext = PERMITTED_IMAGE_TYPES[$mimetype];  //変数の画像のタイプ(jpg,png)を$extに代入
   return get_random_string() . '.' . $ext;
 }
 
 function get_random_string($length = 20){ //ランダムな文字を作る(20文字)関数
   return substr(base_convert(hash('sha256', uniqid()), 16, 36), 0, $length);
-} //文字列の　文字数20文字で　　同じIDを作らない？
+} //文字列の　文字数20文字で　　同じIDを作らない
 
-function save_image($image, $filename){
+function save_image($image, $filename){ //画像を保存する関数
   return move_uploaded_file($image['tmp_name'], IMAGE_DIR . $filename);
-}
+} //戻り値 ディレクトリに保存 入力された画像名 ディレクトリに入力されたファイル名
 
-function delete_image($filename){
-  if(file_exists(IMAGE_DIR . $filename) === true){
-    unlink(IMAGE_DIR . $filename);
-    return true;
+function delete_image($filename){ //画像削除
+  if(file_exists(IMAGE_DIR . $filename) === true){ //ディレクトリに同じファイル名がある場合
+    unlink(IMAGE_DIR . $filename); //ディレクトリの画像ファイルを削除する
+    return true; //削除出来たらtrueを返す
   }
-  return false;
+  return false; //出来なかったらfalseを返す
   
 }
 
 
-
+//整数型の最大値を求める関数
 function is_valid_length($string, $minimum_length, $maximum_length = PHP_INT_MAX){
-  $length = mb_strlen($string);
+  $length = mb_strlen($string); //$stringの文字列の長さを取得
   return ($minimum_length <= $length) && ($length <= $maximum_length);
-}
+} //戻り値 最小値の長さは$length以下 $lengthは最大値以下
 
-function is_alphanumeric($string){
-  return is_valid_format($string, REGEXP_ALPHANUMERIC);
-}
+function is_alphanumeric($string){ //$stringに特定の文字が含まれているか確認する関数
+  return is_valid_format($string, REGEXP_ALPHANUMERIC); //$string, /\A[0-9a-zA-Z]+\z/ 
+} //戻り値 $stringの正規表現
 
-function is_positive_integer($string){
-  return is_valid_format($string, REGEXP_POSITIVE_INTEGER);
-}
+function is_positive_integer($string){ //$stringが正の整数か確認する関数
+  return is_valid_format($string, REGEXP_POSITIVE_INTEGER); //$string, /\A([1-9][0-9]*|0)\z/ (文字列の先頭が[1-9][0-9]0回以上繰り返すまたは文字列の最後が0)
+} //戻り値 $stringの正規表現 正の数
 
-function is_valid_format($string, $format){
+function is_valid_format($string, $format){ //$string,$formatの正規表現
   return preg_match($format, $string) === 1;
-}
+} //戻り値 正規表現 半角英字
 
 
 function is_valid_upload_image($image){  //ファイル形式の関数
@@ -128,7 +128,7 @@ function is_valid_upload_image($image){  //ファイル形式の関数
     return false;
   }
   $mimetype = exif_imagetype($image['tmp_name']); //$image['tmp_name']の画像を調べる
-  if( isset(PERMITTED_IMAGE_TYPES[$mimetype]) === false ){  //ファイルのタイプが違う場合
+  if( isset(PERMITTED_IMAGE_TYPES[$mimetype]) === false ){  //ファイルのタイプ(jpg,png)が違う場合
     set_error('ファイル形式は' . implode('、', PERMITTED_IMAGE_TYPES) . 'のみ利用可能です。');
     return false;
   }
