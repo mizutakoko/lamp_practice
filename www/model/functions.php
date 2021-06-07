@@ -109,13 +109,13 @@ function is_valid_length($string, $minimum_length, $maximum_length = PHP_INT_MAX
   return ($minimum_length <= $length) && ($length <= $maximum_length);
 } //戻り値 最小値の長さは$length以下 $lengthは最大値以下
 
-function is_alphanumeric($string){ //$stringに特定の文字が含まれているか確認する関数
+function is_alphanumeric($string){ //半角英数字が含まれているか確認する関数
   return is_valid_format($string, REGEXP_ALPHANUMERIC); //$string, /\A[0-9a-zA-Z]+\z/ 
-} //戻り値 $stringの正規表現
+} //戻り値 正規表現 (文字列の先頭が[0-9a-zA-Z]0回以上繰り返して末尾が9,z,Z)
 
-function is_positive_integer($string){ //$stringが正の整数か確認する関数
+function is_positive_integer($string){ //半角数字が正の整数か確認する関数
   return is_valid_format($string, REGEXP_POSITIVE_INTEGER); //$string, /\A([1-9][0-9]*|0)\z/ (文字列の先頭が[1-9][0-9]0回以上繰り返すまたは文字列の最後が0)
-} //戻り値 $stringの正規表現 正の数
+} //戻り値 正規表現 (文字列の先頭が[1-9][0-9]0回以上繰り返すまたは文字列の末尾が0)
 
 function is_valid_format($string, $format){ //$string,$formatの正規表現
   return preg_match($format, $string) === 1;
