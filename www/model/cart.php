@@ -23,9 +23,10 @@ function get_user_carts($db, $user_id){   //ユーザーカートの関数 items
     ON
       carts.item_id = items.item_id
     WHERE
-      carts.user_id = {$user_id}
+      carts.user_id = :user_id
   ";
-  return fetch_all_query($db, $sql);  //戻り値は複数行を実行する関数
+$array = array(':user_id'=>$user_id);
+  return fetch_all_query($db, $sql, $array);  //戻り値は複数行を実行する関数
 }
 
 function get_user_cart($db, $user_id, $item_id){  //ユーザーカートの関数　itemsとcartsの表示　条件user_idとitem_id
@@ -47,12 +48,12 @@ function get_user_cart($db, $user_id, $item_id){  //ユーザーカートの関�
     ON
       carts.item_id = items.item_id
     WHERE
-      carts.user_id = {$user_id}
+      carts.user_id = :user_id
     AND
-      items.item_id = {$item_id}
+      items.item_id = :item_id
   ";
-
-  return fetch_query($db, $sql);  //戻り値　一行を実行する
+$array = array(':user_id'=>$user_id, ':item_id'=>$item_id);
+  return fetch_query($db, $sql, $array);  //戻り値　一行を実行する
 
 }
 
@@ -72,10 +73,10 @@ function insert_cart($db, $user_id, $item_id, $amount = 1){ //cartsテーブル�
         user_id,
         amount
       )
-    VALUES({$item_id}, {$user_id}, {$amount})
+    VALUES(:item_id, :user_id, :amount)
   ";  //insertする値 $item_id $user_id $amount
-
-  return execute_query($db, $sql);  //戻り値　実行準備して実行する関数
+$array = array(':item_id'=>$item_id, ':user_id'=>$user_id, ':amount'=>$amount);
+  return execute_query($db, $sql, $array);  //戻り値　実行準備して実行する関数
 }
 
 function update_cart_amount($db, $cart_id, $amount){  //cartの数量変更をする関数
@@ -83,12 +84,13 @@ function update_cart_amount($db, $cart_id, $amount){  //cartの数量変更を�
     UPDATE
       carts
     SET
-      amount = {$amount}
+      amount = :amount
     WHERE
-      cart_id = {$cart_id}
+      cart_id = :cart_id
     LIMIT 1
   ";  //更新対象$amount   条件$cart_id
-  return execute_query($db, $sql);  //戻り値　実行準備して実行する
+$array = array(':amount'=>$amount, ':cart_id'=>$cart_id);
+  return execute_query($db, $sql, $array);  //戻り値　実行準備して実行する
 }
 
 function delete_cart($db, $cart_id){  //cartの削除
@@ -96,11 +98,11 @@ function delete_cart($db, $cart_id){  //cartの削除
     DELETE FROM
       carts
     WHERE
-      cart_id = {$cart_id}
+      cart_id = :cart_id
     LIMIT 1
   ";  //cartsテーブルの条件$cart_idで削除
-
-  return execute_query($db, $sql);  //実行準備と実行関数
+  $array = array(':cart_id'=>$cart_id);
+  return execute_query($db, $sql, $array);  //実行準備と実行関数
 }
 
 function purchase_carts($db, $carts){ //cartsの更新があってエラーがなかったら削除する関数
@@ -125,10 +127,10 @@ function delete_user_carts($db, $user_id){  //ユーザーのカート削除関�
     DELETE FROM
       carts
     WHERE
-      user_id = {$user_id}
+      user_id = :user_id
   ";  //cartsテーブルの削除　条件$user_id
-
-  execute_query($db, $sql); //実行準備と実行
+  $array = array(':user_id'=>$user_id);
+  execute_query($db, $sql, $array); //実行準備と実行
 }
 
 

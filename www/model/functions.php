@@ -1,6 +1,6 @@
 <?php
 
-function dd($var){  //デバッグ関数
+function dd($var){ //デバッグ関数
   var_dump($var); 
   exit(); // 終了
 }
@@ -76,26 +76,26 @@ function is_logined(){  //ログイン関数
   return get_session('user_id') !== ''; //user_idが空じゃなければ$_SESSION['user_id']を返す
 }
 
-function get_upload_filename($file){  //アップロードファイルの関数
+function get_upload_filename($file){ //アップロードファイルの関数
   if(is_valid_upload_image($file) === false){ //ファイル形式の関数
     return '';
   }
   $mimetype = exif_imagetype($file['tmp_name']);//$image['tmp_name']の画像を調べて変数に代入
-  $ext = PERMITTED_IMAGE_TYPES[$mimetype];  //変数の画像のタイプを$extに代入
+  $ext = PERMITTED_IMAGE_TYPES[$mimetype]; //変数の画像のタイプを$extに代入
   return get_random_string() . '.' . $ext;
 }
 
 function get_random_string($length = 20){ //ランダムな文字を作る(20文字)関数
   return substr(base_convert(hash('sha256', uniqid()), 16, 36), 0, $length);
-} //文字列の　文字数20文字で　　同じIDを作らない？
+} //文字列の　文字数20文字で　　同じIDを作らない
 
-function save_image($image, $filename){
+function save_image($image, $filename){ //画像をフォルダに保存する関数
   return move_uploaded_file($image['tmp_name'], IMAGE_DIR . $filename);
 }
 
-function delete_image($filename){
-  if(file_exists(IMAGE_DIR . $filename) === true){
-    unlink(IMAGE_DIR . $filename);
+function delete_image($filename){ //ファイルの画像が既に存在していたら削除する関数
+  if(file_exists(IMAGE_DIR . $filename) === true){ //指定したファイルの存在確認をしてあったら
+    unlink(IMAGE_DIR . $filename); //画像ファイルを削除する
     return true;
   }
   return false;
@@ -104,22 +104,22 @@ function delete_image($filename){
 
 
 
-function is_valid_length($string, $minimum_length, $maximum_length = PHP_INT_MAX){
-  $length = mb_strlen($string);
+function is_valid_length($string, $minimum_length, $maximum_length = PHP_INT_MAX){ //変数の文字列の長さ(最大値)を決める関数
+  $length = mb_strlen($string); //$stringの文字列の長さ取得して$lengthに代入する
   return ($minimum_length <= $length) && ($length <= $maximum_length);
+} //戻り値　$minimum_lengthは$length以下で$maximum_lengthは$length以上
+
+function is_alphanumeric($string){ //半角英数字かどうか確認する関数
+  return is_valid_format($string, REGEXP_ALPHANUMERIC); //'/\A[0-9a-zA-Z]+\z/'
 }
 
-function is_alphanumeric($string){
-  return is_valid_format($string, REGEXP_ALPHANUMERIC);
+function is_positive_integer($string){ //半角数字で正の整数かどうか確認する関数 
+  return is_valid_format($string, REGEXP_POSITIVE_INTEGER); //'/\A([1-9][0-9]*|0)\z/' 先頭が1~9で0~9の0回以上繰り返す OR条件 末尾が0 
 }
 
-function is_positive_integer($string){
-  return is_valid_format($string, REGEXP_POSITIVE_INTEGER);
-}
-
-function is_valid_format($string, $format){
-  return preg_match($format, $string) === 1;
-}
+function is_valid_format($string, $format){ //正規表現
+  return preg_match($format, $string) === 1; 
+}//戻り値 正規表現 $format, $stringがマッチしたら1を返す
 
 
 function is_valid_upload_image($image){  //ファイル形式の関数
@@ -129,7 +129,7 @@ function is_valid_upload_image($image){  //ファイル形式の関数
   }
   $mimetype = exif_imagetype($image['tmp_name']); //$image['tmp_name']の画像を調べる
   if( isset(PERMITTED_IMAGE_TYPES[$mimetype]) === false ){  //ファイルのタイプが違う場合
-    set_error('ファイル形式は' . implode('、', PERMITTED_IMAGE_TYPES) . 'のみ利用可能です。');
+    set_error('ファイル形式は' . implode('、', PERMITTED_IMAGE_TYPES) . 'のみ利用可能です。'); //jpg pngのみ
     return false;
   }
   return true;
