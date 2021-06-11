@@ -4,7 +4,7 @@ require_once MODEL_PATH . 'db.php';
 
 // DB利用
 
-function get_item($db, $item_id){
+function get_item($db, $item_id){ //itemsテーブルの参照
   $sql = "
     SELECT
       item_id, 
@@ -16,13 +16,13 @@ function get_item($db, $item_id){
     FROM
       items
     WHERE
-      item_id = {$item_id}
-  ";
-
-  return fetch_query($db, $sql);
+      item_id = :item_id
+  ";  //条件 item_idが押された時
+$array = array(':item_id'=> $item_id);
+  return fetch_query($db, $sql, $array);  //一行を実行する
 }
 
-function get_items($db, $is_open = false){
+function get_items($db, $is_open = false){ //itemsテーブルの参照
   $sql = '
     SELECT
       item_id, 
@@ -37,22 +37,22 @@ function get_items($db, $is_open = false){
   if($is_open === true){
     $sql .= '
       WHERE status = 1
-    ';
+    '; //条件 ステータスが表示の物だけ
   }
 
-  return fetch_all_query($db, $sql);
+  return fetch_all_query($db, $sql); //複数行を実行
 }
 
-function get_all_items($db){
-  return get_items($db);
+function get_all_items($db){ //全ての商品を参照する関数
+  return get_items($db);//DBからitemsテーブルの参照
 }
 
-function get_open_items($db){
-  return get_items($db, true);
+function get_open_items($db){ //参照の条件があったら表示する関数
+  return get_items($db, true);//ステータスが表示のものだけ参照
 }
 
 function regist_item($db, $name, $price, $stock, $status, $image){
-  $filename = get_upload_filename($image);
+  $filename = get_upload_filename($image);//画像のアップロードファイルの関数
   if(validate_item($name, $price, $stock, $filename, $status) === false){
     return false;
   }
@@ -60,8 +60,8 @@ function regist_item($db, $name, $price, $stock, $status, $image){
 }
 
 function regist_item_transaction($db, $name, $price, $stock, $status, $image, $filename){
-  $db->beginTransaction();
-  if(insert_item($db, $name, $price, $stock, $filename, $status) 
+  $db->beginTransaction(); //トランザクション開始
+  if(insert_item($db, $name, $price, $stock, $filename, $status) //商品書き込み 関数
     && save_image($image, $filename)){
     $db->commit();
     return true;
@@ -71,8 +71,8 @@ function regist_item_transaction($db, $name, $price, $stock, $status, $image, $f
   
 }
 
-function insert_item($db, $name, $price, $stock, $filename, $status){
-  $status_value = PERMITTED_ITEM_STATUSES[$status];
+function insert_item($db, $name, $price, $stock, $filename, $status){ //商品書き込み 関数
+  $status_value = PERMITTED_ITEM_STATUSES[$status]; //'open' => 1,'close' => 0
   $sql = "
     INSERT INTO
       items(
@@ -82,10 +82,11 @@ function insert_item($db, $name, $price, $stock, $filename, $status){
         image,
         status
       )
-    VALUES('{$name}', {$price}, {$stock}, '{$filename}', {$status_value});
+    VALUES(:name, :price, :stock, :filename, :status_value);
   ";
-
-  return execute_query($db, $sql);
+//PDO execute 処理
+$array = array(':name'=>$name, ':price'=>$price, ':stock'=>$stock, ':filename'=>$filename, ':status_value'=>$status_value);
+  return execute_query($db, $sql, $array);
 }
 
 function update_item_status($db, $item_id, $status){
@@ -93,13 +94,13 @@ function update_item_status($db, $item_id, $status){
     UPDATE
       items
     SET
-      status = {$status}
+      status = :status
     WHERE
-      item_id = {$item_id}
+      item_id = :item_id
     LIMIT 1
   ";
-  
-  return execute_query($db, $sql);
+  $array = array(':status' => $status, ':item_id' => $item_id);
+  return execute_query($db, $sql, $array);
 }
 
 function update_item_stock($db, $item_id, $stock){  //アイテム在庫の変更関数
@@ -107,13 +108,13 @@ function update_item_stock($db, $item_id, $stock){  //アイテム在庫の変�
     UPDATE
       items
     SET
-      stock = {$stock}
+      stock = :stock
     WHERE
-      item_id = {$item_id}
+      item_id = :item_id
     LIMIT 1
   ";  //itemsテーブルの在庫を変更　条件は$item_id
-  
-  return execute_query($db, $sql);  //戻り値　実行準備して実行する関数
+  $array = array(':stock' => $stock,':item_id' => $item_id);
+  return execute_query($db, $sql, $array);  //戻り値　実行準備して実行する関数
 }
 
 function destroy_item($db, $item_id){
@@ -121,26 +122,26 @@ function destroy_item($db, $item_id){
   if($item === false){
     return false;
   }
-  $db->beginTransaction();
-  if(delete_item($db, $item['item_id'])
-    && delete_image($item['image'])){
-    $db->commit();
+  $db->beginTransaction(); //トランザクション開始
+  if(delete_item($db, $item['item_id']) //商品の削除と
+    && delete_image($item['image'])){ //ファイルの画像が既に存在していたら削除
+    $db->commit(); //コミット
     return true;
   }
-  $db->rollback();
+  $db->rollback(); //ロールバック
   return false;
 }
 
-function delete_item($db, $item_id){
+function delete_item($db, $item_id){ //商品の削除 item_idを使って
   $sql = "
     DELETE FROM
       items
     WHERE
-      item_id = {$item_id}
+      item_id = :item_id
     LIMIT 1
   ";
-  
-  return execute_query($db, $sql);
+  $array = array(':item_id'=>$item_id); //PDO
+  return execute_query($db, $sql, $array);
 }
 
 
@@ -199,10 +200,10 @@ function is_valid_item_filename($filename){
   return $is_valid;
 }
 
-function is_valid_item_status($status){
+function is_valid_item_status($status){ //ステータスの存在を確認する関数
   $is_valid = true;
-  if(isset(PERMITTED_ITEM_STATUSES[$status]) === false){
+  if(isset(PERMITTED_ITEM_STATUSES[$status]) === false){  //'open' => 1,'close' => 0, ステータスがなかったら
     $is_valid = false;
   }
-  return $is_valid;
+  return $is_valid; //trueかfalse
 }
