@@ -1,3 +1,4 @@
+<?php header("X-FRAME-OPTIONS: DENY"); //token盗難防止 ?>
 <!DOCTYPE html>
 <html lang="ja">
 <head>

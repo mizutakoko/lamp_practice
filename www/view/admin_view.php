@@ -1,3 +1,4 @@
+<?php header("X-FRAME-OPTIONS: DENY"); //token盗難防止 ?>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -43,7 +44,7 @@
           <option value="close">非公開</option>
         </select>
       </div>
-      
+      <input type="hidden" name="token" value="<?php print h($token); //隠しコードでtokenを送信 ?>">
       <input type="submit" value="商品追加" class="btn btn-primary">
     </form>
 
