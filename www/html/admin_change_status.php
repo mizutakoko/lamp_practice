@@ -14,6 +14,13 @@ if(is_logined() === false){ //もしログインしなかったらログイン�
   redirect_to(LOGIN_URL);
 }
 
+$token = get_post('token');
+if(is_valid_csrf_token($token)===false){ //$tokenがないとき
+  unset($_SESSION['csrf_token']); //sessionから送られてきたtokenを削除する
+  redirect_to(LOGIN_URL); //ログイン画面にリダイレクトする
+}
+unset($_SESSION['csrf_token']);
+
 $db = get_db_connect(); //DB接続関数
 
 $user = get_login_user($db);  //ログインしたuser 引数に$dbh
