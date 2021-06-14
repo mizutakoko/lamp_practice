@@ -1,3 +1,4 @@
+<?php header("X-FRAME-OPTIONS: DENY"); //token盗難防止 ?>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -21,6 +22,7 @@
         <label for="password">パスワード: </label>
         <input type="password" name="password" id="password" class="form-control">
       </div>
+      <input type="hidden" name="token" value="<?php print h($token); //隠しコードでtokenを送信?>" >
       <input type="submit" value="ログイン" class="btn btn-primary">
     </form>
   </div>
