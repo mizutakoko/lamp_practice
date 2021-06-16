@@ -17,6 +17,5 @@ CREATE TABLE details(
     item_id int(11) NOT NULL,
     price int(11) NOT NULL,
     amount int(11) NOT NULL,
-    subtotal int(11) NOT NULL,
     PRIMARY KEY(details_id)
 )
