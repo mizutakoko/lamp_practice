@@ -147,57 +147,57 @@ function delete_item($db, $item_id){ //商品の削除 item_idを使って
 
 // 非DB
 
-function is_open($item){
-  return $item['status'] === 1;
+function is_open($item){ //$itemのステータスが１のときだけ表示する 関数
+  return $item['status'] === 1; //戻り値 ステータス1
 }
 
 function validate_item($name, $price, $stock, $filename, $status){
-  $is_valid_item_name = is_valid_item_name($name);
-  $is_valid_item_price = is_valid_item_price($price);
-  $is_valid_item_stock = is_valid_item_stock($stock);
-  $is_valid_item_filename = is_valid_item_filename($filename);
-  $is_valid_item_status = is_valid_item_status($status);
+  $is_valid_item_name = is_valid_item_name($name); //$nameの文字数制限　関数
+  $is_valid_item_price = is_valid_item_price($price); //$price正規表現 関数
+  $is_valid_item_stock = is_valid_item_stock($stock); //$stockの正規表現
+  $is_valid_item_filename = is_valid_item_filename($filename); //ファイルの存在を確認する関数
+  $is_valid_item_status = is_valid_item_status($status); //ステータスの存在を確認する関数
 
   return $is_valid_item_name
     && $is_valid_item_price
     && $is_valid_item_stock
     && $is_valid_item_filename
-    && $is_valid_item_status;
+    && $is_valid_item_status; //それぞれのtrueかfales(エラ―)を返す
 }
 
-function is_valid_item_name($name){
+function is_valid_item_name($name){ //$nameの文字数制限　関数
   $is_valid = true;
-  if(is_valid_length($name, ITEM_NAME_LENGTH_MIN, ITEM_NAME_LENGTH_MAX) === false){
-    set_error('商品名は'. ITEM_NAME_LENGTH_MIN . '文字以上、' . ITEM_NAME_LENGTH_MAX . '文字以内にしてください。');
-    $is_valid = false;
+  if(is_valid_length($name, ITEM_NAME_LENGTH_MIN, ITEM_NAME_LENGTH_MAX) === false){ //$nameの文字数１～１００じゃなかったら
+    set_error('商品名は'. ITEM_NAME_LENGTH_MIN . '文字以上、' . ITEM_NAME_LENGTH_MAX . '文字以内にしてください。'); //エラー
+    $is_valid = false; //falseを返す
   }
-  return $is_valid;
+  return $is_valid; //trueかfalse
 }
 
-function is_valid_item_price($price){
+function is_valid_item_price($price){ //$price正規表現 関数
   $is_valid = true;
-  if(is_positive_integer($price) === false){
-    set_error('価格は0以上の整数で入力してください。');
+  if(is_positive_integer($price) === false){ //$priceが整数じゃなかったら
+    set_error('価格は0以上の整数で入力してください。'); //エラー
     $is_valid = false;
   }
-  return $is_valid;
+  return $is_valid; //trueかfalse
 }
 
-function is_valid_item_stock($stock){
+function is_valid_item_stock($stock){ //$stockの正規表現
   $is_valid = true;
-  if(is_positive_integer($stock) === false){
-    set_error('在庫数は0以上の整数で入力してください。');
+  if(is_positive_integer($stock) === false){ //$stockが整数じゃなかったら
+    set_error('在庫数は0以上の整数で入力してください。'); //エラー
     $is_valid = false;
   }
-  return $is_valid;
+  return $is_valid; //trueかfalse
 }
 
-function is_valid_item_filename($filename){
+function is_valid_item_filename($filename){ //ファイルの存在を確認する関数
   $is_valid = true;
-  if($filename === ''){
+  if($filename === ''){ //$filenameが空だったら
     $is_valid = false;
   }
-  return $is_valid;
+  return $is_valid;//trueかfalse
 }
 
 function is_valid_item_status($status){ //ステータスの存在を確認する関数

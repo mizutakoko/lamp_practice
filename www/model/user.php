@@ -2,7 +2,7 @@
 require_once MODEL_PATH . 'functions.php';
 require_once MODEL_PATH . 'db.php';
 
-function get_user($db, $user_id){
+function get_user($db, $user_id){ //usersテーブルの表示
   $sql = "
     SELECT
       user_id, 
@@ -14,9 +14,9 @@ function get_user($db, $user_id){
     WHERE
       user_id = :user_id
     LIMIT 1
-  ";
-  $array = array(':user_id' => $user_id);
-  return fetch_query($db, $sql, $array);
+  "; //usersテーブルを表示する 条件:同じuser_idの時 一行ずつ
+  $array = array(':user_id' => $user_id); //PDOのexecute 
+  return fetch_query($db, $sql, $array); //戻り値 一行を実行する
 }
 
 function get_user_by_name($db, $name){
