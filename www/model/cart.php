@@ -176,6 +176,15 @@ function insert_buy($db,$carts,$total_price){ //購入履歴テーブル書き�
 }
 
 function details_insert($db, $buy_id, $carts){ //購入明細テーブルの関数
+  foreach($carts as $cart){
+    if(array_details_insert($db,$buy_id,$cart['item_id'],$cart['price'],$cart['amount'])===false){
+      return false;
+    }
+  }
+  return true;
+}
+
+function array_details_insert($db,$buy_id,$item_id,$price,$amount){
   $sql = "
   INSERT INTO
     details(
@@ -186,6 +195,6 @@ function details_insert($db, $buy_id, $carts){ //購入明細テーブルの関�
     )
     VALUES(:buy_id, :item_id, :price, :amount)
   ";
-  $array = array(':buy_id'=>$buy_id, ':item_id'=>$carts[0]['item_id'], ':price'=>$carts[0]['price'], ':amount'=>$carts[0]['amount']);
+  $array = array(':buy_id'=>$buy_id, ':item_id'=>$item_id, ':price'=>$price, ':amount'=>$amount);
   return execute_query($db, $sql, $array);
 }
