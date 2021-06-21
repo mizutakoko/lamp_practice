@@ -161,3 +161,40 @@ function validate_cart_purchase($carts){  //$cartsのエラー関数
   return true;
 }
 
+function insert_buy($db,$carts,$total_price){ //購入履歴テーブル書き込み 関数
+  $sql = "
+  INSERT INTO
+    buy(
+      user_id,
+      buy_total
+    )
+    VALUES(:user_id, :buy_total)
+  ";
+  $array = array(':user_id'=>$carts, ':buy_total'=>$total_price);
+  return execute_query($db, $sql, $array);
+
+}
+
+function details_insert($db, $buy_id, $carts){ //購入明細テーブルの関数
+  foreach($carts as $cart){
+    if(array_details_insert($db,$buy_id,$cart['item_id'],$cart['price'],$cart['amount'])===false){
+      return false;
+    }
+  }
+  return true;
+}
+
+function array_details_insert($db,$buy_id,$item_id,$price,$amount){
+  $sql = "
+  INSERT INTO
+    details(
+      buy_id,
+      item_id,
+      price,
+      amount
+    )
+    VALUES(:buy_id, :item_id, :price, :amount)
+  ";
+  $array = array(':buy_id'=>$buy_id, ':item_id'=>$item_id, ':price'=>$price, ':amount'=>$amount);
+  return execute_query($db, $sql, $array);
+}
