@@ -17,6 +17,9 @@
             <a class="nav-link" href="<?php print(h(ADMIN_URL));?>">管理</a>
           </li>
         <?php } ?>
+        <li class="nav-item">
+          <a class="nav-link" href="<?php print(h(BUY_URL)); ?>">購入履歴</a>
+        </li>
       </ul>
     </div>
   </nav>

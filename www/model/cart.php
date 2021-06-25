@@ -198,3 +198,72 @@ function array_details_insert($db,$buy_id,$item_id,$price,$amount){
   $array = array(':buy_id'=>$buy_id, ':item_id'=>$item_id, ':price'=>$price, ':amount'=>$amount);
   return execute_query($db, $sql, $array);
 }
+
+function select_buy($db, $user_id){
+  $sql="
+  SELECT
+    buy_id,
+    user_id,
+    buy_time,
+    buy_total
+  FROM
+    buy
+  WHERE
+    user_id =:user_id
+  ORDER BY 
+    buy_time DESC   
+  ";
+  $array = array(':user_id'=>$user_id);
+  return fetch_all_query($db, $sql, $array);
+}
+
+function select_details($db, $buy_id){
+  $sql="
+  SELECT
+    details.buy_id,
+    details.price,
+    details.amount,
+    items.name
+  FROM
+    details
+  JOIN
+    items
+  ON
+    details.item_id = items.item_id
+  WHERE
+    details.buy_id = :buy_id 
+  ";
+  $array = array(':buy_id'=>$buy_id);
+  return fetch_all_query($db, $sql, $array);
+}
+
+function select_buy_id($db, $buy_id){
+  $sql="
+  SELECT
+    buy_id,
+    user_id,
+    buy_time,
+    buy_total
+  FROM
+    buy
+  WHERE
+    buy_id = :buy_id  
+  ";
+  $array = array(':buy_id'=>$buy_id);
+  return fetch_query($db, $sql, $array);
+}
+
+function select_admin($db){
+  $sql="
+  SELECT
+    buy_id,
+    user_id,
+    buy_time,
+    buy_total
+  FROM
+    buy
+  ORDER BY 
+    buy_time DESC   
+  ";
+  return fetch_all_query($db, $sql);
+}
