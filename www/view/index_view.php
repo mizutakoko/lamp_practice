@@ -8,16 +8,30 @@
   <link rel="stylesheet" href="<?php print(h(STYLESHEET_PATH . 'index.css')); ?>">
 </head>
 <body>
-  <?php include VIEW_PATH . 'templates/header_logined.php'; ?>
-  
+    <?php include VIEW_PATH . 'templates/header_logined.php'; ?>
 
+    
+      <div style="margin-left: 1320px">
+        <form method="get"  action="index.php">
+          <div style="display:flex">
+            <select name="Lineup">
+              <option value="New" <?php if($Line_up ==='New'||$Line_up === ''){print h('selected');}?>>新着順</option>
+              <option value="pricecheap" <?php if($Line_up ==='pricecheap'){print h('selected');}?> >価格の安い順</option>
+              <option value="pricehigh" <?php if($Line_up ==='pricehigh'){print h('selected');}?> >価格の高い順</option>
+            </select>
+            <div>
+              <input type="submit" value="並べ替え">
+            </div>
+          </div>  
+        </form>
+      </div> 
   <div class="container">
     <h1>商品一覧</h1>
     <?php include VIEW_PATH . 'templates/messages.php'; ?>
 
     <div class="card-deck">
       <div class="row">
-      <?php foreach($items as $item){ ?>
+      <?php foreach($Line_up_New as $item){ ?>
         <div class="col-6 item">
           <div class="card h-100 text-center">
             <div class="card-header">

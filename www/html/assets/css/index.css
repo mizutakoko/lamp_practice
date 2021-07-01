@@ -1,4 +1,6 @@
 .item {
   margin-top: 10px;
 }
-
+.text {
+  text-align: right;
+}

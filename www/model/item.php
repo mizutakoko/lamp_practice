@@ -162,7 +162,7 @@ function validate_item($name, $price, $stock, $filename, $status){
     && $is_valid_item_price
     && $is_valid_item_stock
     && $is_valid_item_filename
-    && $is_valid_item_status; //それぞれのtrueかfales(エラ―)を返す
+    && $is_valid_item_status; //ひとつでもfales(エラ―)があればfalesを返す
 }
 
 function is_valid_item_name($name){ //$nameの文字数制限　関数
@@ -206,4 +206,88 @@ function is_valid_item_status($status){ //ステータスの存在を確認す�
     $is_valid = false;
   }
   return $is_valid; //trueかfalse
+}
+
+function get_Line_up_New($db, $is_open = false){ //itemsテーブルの参照 並び替え
+  $sql = '
+    SELECT
+      item_id, 
+      name,
+      stock,
+      price,
+      image,
+      status
+    FROM
+      items 
+  ';
+  if($is_open === true){
+    $sql .= '
+      WHERE status = 1
+    '; //条件 ステータスが表示の物だけ
+
+  }
+  $sql .='
+  ORDER BY
+    created desc';
+
+  return fetch_all_query($db, $sql); //複数行を実行
+}
+
+function get_Lineup_New($db){ //参照の条件があったら表示する関数
+  return get_Line_up_New($db, true);//ステータスが表示のものだけ参照
+}
+
+function get_Line_up_asc($db, $is_open = false){ //itemsテーブルの参照 並び替え
+  $sql = '
+    SELECT
+      item_id, 
+      name,
+      stock,
+      price,
+      image,
+      status
+    FROM
+      items
+  ';
+  if($is_open === true){
+    $sql .= '
+      WHERE status = 1
+    '; //条件 ステータスが表示の物だけ
+  }
+  $sql .='
+  ORDER BY
+      price asc';
+
+  return fetch_all_query($db, $sql); //複数行を実行
+}
+
+function get_Lineup_asc($db){ //参照の条件があったら表示する関数
+  return get_Line_up_asc($db, true);//ステータスが表示のものだけ参照
+}
+
+function get_Line_up_desc($db, $is_open = false){ //itemsテーブルの参照 並び替え
+  $sql = '
+    SELECT
+      item_id, 
+      name,
+      stock,
+      price,
+      image,
+      status
+    FROM
+      items
+  ';
+  if($is_open === true){
+    $sql .= '
+      WHERE status = 1
+    '; //条件 ステータスが表示の物だけ
+  }
+  $sql .='
+  ORDER BY
+      price desc';
+  return fetch_all_query($db, $sql); //複数行を実行
+}
+
+function get_Lineup_desc($db){ //参照の条件があったら表示する関数
+  return get_Line_up_desc($db, true);//ステータスが表示のものだけ参照
 }

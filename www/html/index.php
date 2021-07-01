@@ -13,7 +13,19 @@ if(is_logined() === false){
 $db = get_db_connect();
 $user = get_login_user($db);
 
-$items = get_open_items($db);
+$Line_up = get_get('Lineup');
+
+//if文でそれぞれ分けて$Line_up(New・pricecheap・pricehigh) select文
+if(($Line_up === 'New')||($Line_up ==="")){
+  $Line_up_New = get_Lineup_New($db); //新着順
+
+}else if($Line_up === 'pricecheap'){
+  $Line_up_New = get_Lineup_asc($db); //安い順
+
+}else if($Line_up === 'pricehigh'){
+  $Line_up_New = get_Lineup_desc($db); //高い順
+
+}
 
 $token = get_csrf_token(); //tokenの生成
 
