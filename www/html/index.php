@@ -28,5 +28,5 @@ if(($Line_up === 'New')||($Line_up ==="")){
 }
 
 $token = get_csrf_token(); //tokenの生成
-
+//追記
 include_once VIEW_PATH . 'index_view.php';
